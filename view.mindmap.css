@@ -7,11 +7,37 @@
   stroke-width: 1.5px;
 }
 
-.markmap-node-text {
-  fill:  #000;
-  font: 10px sans-serif;
-}
-
 .markmap-link {
   fill: none;
+}
+
+.markmap-node-text {
+  fill:  #000;
+  font: 12px sans-serif;
+}
+
+.markmap-depth-0 .markmap-node-text{
+  font-size:18px;
+  font-weight: 600;
+}
+
+.markmap-depth-1 .markmap-node-text{
+  font-size:16px;
+}
+
+.markmap-depth-0 image,
+.markmap-depth-1 image,
+.markmap-depth-2 image{
+  width: 30px;
+  height: 30px;
+}
+
+.markmap-depth-3 image,
+.markmap-depth-4 image{
+  width: 10px;
+  height: 10px;
+}
+
+.markmap-node a:hover{
+  text-decoration: underline;
 }

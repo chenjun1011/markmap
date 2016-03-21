@@ -1,3 +1,29 @@
+function parseChildren(children) {
+  var results = [];
+
+  if (children) {
+    var i = 0;
+    var l = children.length;
+
+    for (; i < l; i++) {
+      if (children[i].type === 'image') {
+        results.push(children[i]);
+      } else if (children[i].type === 'link_open') {
+        results.push({
+          type: 'link',
+          href: children[i].href,
+          content: children[i + 1].content
+        });
+        i++;
+      } else if (children[i].type === 'text') {
+        results.push(children[i]);
+      }
+    }
+  }
+
+  return results;
+}
+
 module.exports = function parseMarkdown(text) {
 
   // var marked = require('marked');
@@ -16,7 +42,8 @@ module.exports = function parseMarkdown(text) {
       headings.push({
         depth: tokens[i].hLevel,
         line: tokens[i].lines[0],
-        name: tokens[i+1].content
+        name: tokens[i+1].content,
+        rules: tokens[i+1].children ? parseChildren(tokens[i+1].children) : null
       });
       i += 1;
     }
