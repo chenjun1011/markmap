@@ -372,7 +372,7 @@
             }
 
             if (d.depth > 2) {
-              return 25;
+              return 27;
             }
 
             return 45;
