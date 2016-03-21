@@ -316,7 +316,7 @@
                 parent.append("image")
                   .attr('class', 'href')
                   .attr("x", 10)
-                  .attr("y", function(d){ return d.depth > 2 ? -15: -30;})
+                  .attr("y", function(d){ return d.depth > 2 ? -18: -30;})
                   .attr("xlink:href", rule.src)
               } else if (rule.type === 'link') {
                 parent.append("a")

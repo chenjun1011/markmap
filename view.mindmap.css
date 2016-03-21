@@ -34,8 +34,8 @@
 
 .markmap-depth-3 image,
 .markmap-depth-4 image{
-  width: 10px;
-  height: 10px;
+  width: 15px;
+  height: 15px;
 }
 
 .markmap-node a:hover{
