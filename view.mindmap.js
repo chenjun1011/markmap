@@ -76,7 +76,8 @@
     layout: 'tree',
     color: 'gray',
     linkShape: 'diagonal',
-    renderer: 'boxed'
+    renderer: 'boxed',
+    textIndent: 40
   };
 
   assign(Markmap.prototype, {
@@ -257,7 +258,7 @@
           .attr('stroke-width', 1);
 
         node.select('text')
-          .attr("dy", ".3em")
+          .attr("dy", ".3em");
         
         svg.selectAll("path.markmap-link")
           .attr('stroke-width', 1);
@@ -372,7 +373,7 @@
             }
 
             if (d.depth > 2) {
-              return 27;
+              return state.textIndent;
             }
 
             return 45;

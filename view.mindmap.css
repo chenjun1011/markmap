@@ -25,17 +25,9 @@
   font-size:16px;
 }
 
-.markmap-depth-0 image,
-.markmap-depth-1 image,
-.markmap-depth-2 image{
+.markmap-node image{
   width: 30px;
   height: 30px;
-}
-
-.markmap-depth-3 image,
-.markmap-depth-4 image{
-  width: 15px;
-  height: 15px;
 }
 
 .markmap-node a:hover{
