@@ -62,6 +62,34 @@
     }
   }
 
+  function collapse(data, depth) {
+    if (!data) {
+      return;
+    }
+    data.forEach(function(d, i) {
+      if (d.depth >= depth) {
+        d._children = d.children;
+        d.children = null;
+        return;
+      }
+      collapse(d.children, depth);
+    });
+  }
+
+  function expand(data){
+    if (!data) {
+      return;
+    }
+    data.forEach(function(d, i) {
+      if (d._children) {
+        d.children = d._children;
+        d._children = null;
+        return;
+      }
+      expand(d.children);
+    });
+  }
+
   function Markmap(svg, data, options) {
     if (!(this instanceof Markmap)) return new Markmap(svg, data, options);
     this.init(svg, data, options);
@@ -77,7 +105,8 @@
     color: 'gray',
     linkShape: 'diagonal',
     renderer: 'boxed',
-    textIndent: 40
+    textIndent: 40,
+    scale: [0.5, 1]
   };
 
   assign(Markmap.prototype, {
@@ -131,7 +160,7 @@
       state.width = svg.node().offsetWidth;
       this.set(options);
 
-      var zoom = this.zoom = d3.behavior.zoom()
+      var zoom = this.zoom = d3.behavior.zoom().scaleExtent(state.scale)
         .on("zoom", function() {
           this.updateZoom(d3.event.translate, d3.event.scale);
         }.bind(this));
@@ -151,7 +180,31 @@
     },
     updateZoom: function(translate, scale) {
       var state = this.state;
-      state.zoomTranslate = translate;
+      var x = translate[0];
+      var y = translate[1];
+
+      var react = this.svg.node().getBoundingClientRect();
+      var realHeight = react.height;
+      var realWidth = react.width;
+      var width = state.width;
+      var height = state.height;
+
+      var h = (height - realHeight) / 2;
+      var w = (realWidth - width) / 2;
+
+      if (realHeight < height) {
+        y = Math.min(h, Math.max(-h, y));
+      } else {
+        y = Math.min(realHeight / 2, Math.max(h, y));
+      }
+
+      if (realWidth < width) {
+        x = Math.min(width - realWidth, Math.max(0, x));
+      } else {
+        x = Math.min(w, Math.max(-(w+300), x));
+      }
+
+      state.zoomTranslate = [x, y];
       state.zoomScale = scale;
       this.zoom.translate(state.zoomTranslate)
         .scale(state.zoomScale);
@@ -172,25 +225,23 @@
       return this;
     },
     setData: function(data) {
+      var state = this.state;
+      var depth = this.state.depth;
+
       if (data.children) {
         data.children.forEach(function(d, i) {
           traverseBranchId(d, i);
         });
       }
 
-      var state = this.state;
       state.root = data;
       state.root.x0 = state.height / 2;
       state.root.y0 = 0;
 
-      // function collapse(d) {
-      //   if (d.children) {
-      //     d._children = d.children;
-      //     d._children.forEach(collapse);
-      //     d.children = null;
-      //   }
-      // }
-      //root.children.forEach(collapse);
+      if (depth) {
+        collapse(data.children, depth);
+      }
+
       return this;
     },
     update: function(source) {
@@ -446,6 +497,10 @@
         d._children = null;
       }
       this.update(d);
+    },
+    expand: function() {
+      expand(this.state.root.children);
+      this.update(this.state.root);
     }
 
   });
