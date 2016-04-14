@@ -37,15 +37,41 @@ module.exports = function parseMarkdown(text) {
 
   var tokens = md.parse(text, {})
   var headings = [];
+  var hLevel = 0;
+  var lLevel = [0];
   for (var i = 0; i < tokens.length; i += 1) {
-    if (tokens[i].type === 'heading_open') {
+    var type = tokens[i].type;
+
+    if (type === 'heading_open') {
+      hLevel = tokens[i].hLevel;
       headings.push({
-        depth: tokens[i].hLevel,
+        depth: hLevel,
         line: tokens[i].lines[0],
         name: tokens[i+1].content,
         rules: tokens[i+1].children ? parseChildren(tokens[i+1].children) : null
       });
       i += 1;
+    }
+
+    if (type === 'bullet_list_open') {
+      if (tokens[i].level >= lLevel[0]) {
+        lLevel.unshift(tokens[i].level);
+        hLevel++;
+      }
+    }
+
+    if (type === "paragraph_open") {
+      headings.push({
+        depth: hLevel,
+        line: tokens[i].lines[0],
+        name: tokens[i+1].content,
+        rules: tokens[i+1].children ? parseChildren(tokens[i+1].children) : null
+      });
+    }
+
+    if (type === 'bullet_list_close') {
+      lLevel.shift();
+      hLevel--;
     }
   }
 
