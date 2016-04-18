@@ -60,12 +60,12 @@ module.exports = function parseMarkdown(text) {
       }
     }
 
-    if (type === "paragraph_open") {
+    if (type === "list_item_open") {
       headings.push({
         depth: hLevel,
         line: tokens[i].lines[0],
-        name: tokens[i+1].content,
-        rules: tokens[i+1].children ? parseChildren(tokens[i+1].children) : null
+        name: tokens[i+2].content,
+        rules: tokens[i+2].children ? parseChildren(tokens[i+2].children) : null
       });
     }
 

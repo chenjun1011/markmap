@@ -195,7 +195,7 @@
       if (realHeight < height) {
         y = Math.min(h, Math.max(-h, y));
       } else {
-        y = Math.min(realHeight / 2, Math.max(h, y));
+        y = Math.min((realHeight + height) / 2, Math.max(h, y));
       }
 
       if (realWidth < width) {
