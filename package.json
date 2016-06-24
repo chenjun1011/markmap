@@ -1,6 +1,6 @@
 {
   "name": "enhanced-markmap",
-  "version": "0.0.9",
+  "version": "0.0.10",
   "description": "Visualize markdown documents as mindmaps",
   "main": "index.js",
   "scripts": {
